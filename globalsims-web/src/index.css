@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #0b0e11;
+  --color-ink-900: #10141a;
+  --color-ink-800: #171b21;
+  --color-ink-700: #232932;
+  --color-fog-400: #8b93a1;
+  --color-fog-600: #5c6472;
+  --color-paper-50: #f5f3ee;
+  --color-signal-amber: #f2a93b;
+  --color-signal-amber-dim: #7a5a24;
+  --color-duel-blue: #3e7cff;
+  --color-loss-red: #c0524a;
+
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+  }
+  body {
+    background-color: var(--color-ink-950);
+    color: var(--color-paper-50);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  .mono {
+    font-family: var(--font-mono);
+  }
+  ::selection {
+    background: var(--color-signal-amber);
+    color: var(--color-ink-950);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-duel-blue);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@keyframes seal-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(242, 169, 59, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(242, 169, 59, 0); }
+}
+.seal-pulse {
+  animation: seal-pulse 1.4s ease-out infinite;
+}
+
+@keyframes vault-open {
+  0% { transform: rotateY(0deg) scale(1); }
+  50% { transform: rotateY(90deg) scale(1.02); }
+  100% { transform: rotateY(0deg) scale(1); }
+}
+.vault-open {
+  animation: vault-open 0.5s ease-in-out;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fade-up 0.35s ease-out;
+}
