@@ -20,9 +20,13 @@ export function PackageCard({
           : 'border-ink-700 bg-ink-900 hover:border-fog-600'
       }`}
     >
-      <p className="text-xs uppercase tracking-widest text-fog-400 mono mb-1">
-        {isFree ? 'No stake' : 'Stake'}
-      </p>
+      <span className="text-xs uppercase tracking-widest text-fog-400 mono mb-1">
+        {isFree && (
+        <p className="mono text-sm text-signal-amber mt-1">
+          Ksh 1 Per Win!
+        </p>
+      )}
+      </span>
       <p className="display text-lg font-semibold">{pkg.label}</p>
       {!isFree && (
         <p className="mono text-sm text-signal-amber mt-1">

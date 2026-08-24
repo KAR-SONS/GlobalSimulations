@@ -29,7 +29,6 @@ export function Wallet({
   const [tab, setTab] = useState<'deposit' | 'withdraw'>('deposit')
 
   const [depositAmount, setDepositAmount] = useState(DEPOSIT_PRESETS[0])
-  const [depositPhone, setDepositPhone] = useState('')
   const [depositStatus, setDepositStatus] = useState<string | null>(null)
   const [depositLoading, setDepositLoading] = useState(false)
 
@@ -67,19 +66,34 @@ export function Wallet({
     setDepositLoading(true)
 
     const { data, error } = await supabase.functions.invoke('initiate_deposit', {
-      body: { amount: depositAmount, phone: depositPhone },
+      body: {
+        amount: depositAmount,
+        callback_url: `${window.location.origin}/wallet`,
+      },
     })
 
-    setDepositLoading(false)
-
     if (error || data?.error) {
+      setDepositLoading(false)
       setDepositStatus(data?.error ?? 'Could not start the deposit — try again')
       return
     }
 
-    setDepositStatus(data.message ?? 'Check your phone to complete the M-Pesa payment')
-    pollForDepositResult()
+    // Full-page redirect to Paystack's hosted checkout. The wallet is
+    // only ever credited by the webhook once payment actually
+    // completes — this redirect just gets the user to that page.
+    window.location.href = data.authorization_url
   }
+
+  // If we've just been redirected back from Paystack's checkout page,
+  // poll a few times so the balance updates without a manual refresh
+  // while the webhook catches up.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('trxref') || params.get('reference')) {
+      pollForDepositResult()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Simple client-side poll so the balance updates without a manual
   // refresh once the user completes the STK prompt. The webhook is
@@ -168,15 +182,6 @@ export function Wallet({
             ))}
           </div>
 
-          <input
-            type="tel"
-            placeholder="M-Pesa phone number (07XX XXX XXX)"
-            value={depositPhone}
-            onChange={(e) => setDepositPhone(e.target.value)}
-            required
-            className="w-full rounded-xl border border-ink-700 bg-ink-900 px-4 py-3 text-sm placeholder:text-fog-600 focus-visible:outline-2 focus-visible:outline-duel-blue"
-          />
-
           <button
             type="submit"
             disabled={depositLoading}
@@ -194,7 +199,7 @@ export function Wallet({
           <input
             type="number"
             step="0.01"
-            min="20"
+            min="100"
             placeholder="Amount in Ksh"
             value={withdrawAmount}
             onChange={(e) => setWithdrawAmount(e.target.value)}

@@ -3,9 +3,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabaseClient'
 import { Navbar } from './components/Navbar'
+import { InstallPrompt } from './components/InstallPrompt'
 import { Landing } from './pages/Landing'
 import { Play } from './pages/Play'
 import { Wallet } from './pages/Wallet'
+import { HowItWorks } from './pages/HowItWorks'
 
 function App() {
   const [session, setSession] = useState<Session | null | undefined>(undefined) // undefined = loading
@@ -56,6 +58,7 @@ function App() {
   return (
     <BrowserRouter>
       {session && <Navbar username={username} balance={balance} />}
+      <InstallPrompt />
       <Routes>
         <Route
           path="/"
@@ -74,6 +77,10 @@ function App() {
               <Navigate to="/" replace />
             )
           }
+        />
+        <Route
+          path="/how-it-works"
+          element={session ? <HowItWorks /> : <Navigate to="/" replace />}
         />
       </Routes>
     </BrowserRouter>

@@ -4,6 +4,7 @@ import { formatKsh } from '../lib/types'
 import type { Package, Move, StartGameResponse, SubmitMoveResponse } from '../lib/types'
 import { PackageCard } from '../components/PackageCard'
 import { MoveChamber } from '../components/MoveChamber'
+import { Link } from 'react-router-dom'
 
 type Stage = 'select' | 'searching' | 'dueling' | 'complete'
 type RoundPhase = 'choosing' | 'sealed' | 'revealed'
@@ -158,6 +159,9 @@ export function Play({ onWalletChange }: { onWalletChange: () => void }) {
           >
             Find opponent
           </button>
+          <Link to="/how-it-works" className="text-md font-semibold text-signal-amber underline hover:text-fog-300 transition mt-10 block text-center ">
+            How It Works
+          </Link>
         </div>
       )}
 
